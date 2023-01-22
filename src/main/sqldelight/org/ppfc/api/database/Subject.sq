@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS subject (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM subject;
+
+selectWhereId:
+SELECT * FROM subject WHERE id = :id;
+
+deleteWhereId:
+DELETE FROM subject WHERE id = :id;
+
+updateWhereId:
+UPDATE subject SET
+    name = :name
+WHERE id = :id;
+
+insertModel:
+INSERT INTO subject(
+    name
+) VALUES ?;

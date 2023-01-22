@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS course (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    number INTEGER NOT NULL
+);
+
+selectAll:
+SELECT * FROM course;
+
+selectWhereId:
+SELECT * FROM course WHERE id = :id;
+
+deleteWhereId:
+DELETE FROM course WHERE id = :id;
+
+updateWhereId:
+UPDATE course SET
+    number = :name
+WHERE id = :id;
+
+insertModel:
+INSERT INTO course(
+    number
+) VALUES ?;

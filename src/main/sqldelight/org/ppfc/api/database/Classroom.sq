@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS classroom (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM classroom;
+
+selectWhereId:
+SELECT * FROM classroom WHERE id = :id;
+
+deleteWhereId:
+DELETE FROM classroom WHERE id = :id;
+
+updateWhereId:
+UPDATE classroom SET
+    name = :name
+WHERE id = :id;
+
+insertModel:
+INSERT INTO classroom(
+    name
+) VALUES ?;

@@ -1,0 +1,51 @@
+CREATE TABLE IF NOT EXISTS change (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    gradeId INTEGER NOT NULL,
+    classroomId INTEGER NOT NULL,
+    teacherId INTEGER,
+    subjectId INTEGER,
+    eventName TEXT,
+    isSubject INTEGER NOT NULL,
+    lessonNumber INTEGER NOT NULL,
+    dateUnix INTEGER NOT NULL,
+    isNumerator INTEGER NOT NULL,
+    FOREIGN KEY (gradeId) REFERENCES grade(id) ON DELETE CASCADE,
+    FOREIGN KEY (classroomId) REFERENCES classroom(id) ON DELETE CASCADE,
+    FOREIGN KEY (teacherId) REFERENCES teacher(id) ON DELETE CASCADE,
+    FOREIGN KEY (subjectId) REFERENCES subject(id) ON DELETE CASCADE
+);
+
+selectAll:
+SELECT * FROM change;
+
+selectWhereId:
+SELECT * FROM change WHERE id = :id;
+
+deleteWhereId:
+DELETE FROM change WHERE id = :id;
+
+updateWhereId:
+UPDATE change SET
+    gradeId = :gradeId,
+    classroomId = :classroomId,
+    teacherId = :teacherId,
+    subjectId = :subjectId,
+    eventName = :eventName,
+    isSubject = :isSubject,
+    lessonNumber = :lessonNumber,
+    dateUnix = :dateUnix,
+    isNumerator = :isNumerator
+WHERE id = :id;
+
+insertModel:
+INSERT INTO change(
+    gradeId,
+    classroomId,
+    teacherId,
+    subjectId,
+    eventName,
+    isSubject,
+    lessonNumber,
+    dateUnix,
+    isNumerator
+) VALUES ?;

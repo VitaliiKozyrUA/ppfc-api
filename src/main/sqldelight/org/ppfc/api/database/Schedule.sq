@@ -1,0 +1,51 @@
+CREATE TABLE IF NOT EXISTS schedule (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    gradeId INTEGER NOT NULL,
+    classroomId INTEGER NOT NULL,
+    teacherId INTEGER NOT NULL,
+    subjectId INTEGER,
+    eventName TEXT,
+    isSubject INTEGER NOT NULL,
+    lessonNumber INTEGER NOT NULL,
+    dayNumber INTEGER NOT NULL,
+    isNumerator INTEGER NOT NULL,
+    FOREIGN KEY (gradeId) REFERENCES grade(id) ON DELETE CASCADE,
+    FOREIGN KEY (classroomId) REFERENCES classroom(id) ON DELETE CASCADE,
+    FOREIGN KEY (teacherId) REFERENCES teacher(id) ON DELETE CASCADE,
+    FOREIGN KEY (subjectId) REFERENCES subject(id) ON DELETE CASCADE
+);
+
+selectAll:
+SELECT * FROM schedule;
+
+selectWhereId:
+SELECT * FROM schedule WHERE id = :id;
+
+deleteWhereId:
+DELETE FROM schedule WHERE id = :id;
+
+updateWhereId:
+UPDATE schedule SET
+    gradeId = :gradeId,
+    classroomId = :classroomId,
+    teacherId = :teacherId,
+    subjectId = :subjectId,
+    eventName = :eventName,
+    isSubject = :isSubject,
+    lessonNumber = :lessonNumber,
+    dayNumber = :dayNumber,
+    isNumerator = :isNumerator
+WHERE id = :id;
+
+insertModel:
+INSERT INTO schedule(
+    gradeId,
+    classroomId,
+    teacherId,
+    subjectId,
+    eventName,
+    isSubject,
+    lessonNumber,
+    dayNumber,
+    isNumerator
+) VALUES ?;

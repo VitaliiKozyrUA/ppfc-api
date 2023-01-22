@@ -1,0 +1,27 @@
+CREATE TABLE IF NOT EXISTS grade (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    number INTEGER NOT NULL,
+    courseId INTEGER NOT NULL,
+    FOREIGN KEY (courseId) REFERENCES course(id) ON DELETE CASCADE
+);
+
+selectAll:
+SELECT * FROM grade;
+
+selectWhereId:
+SELECT * FROM grade WHERE id = :id;
+
+deleteWhereId:
+DELETE FROM grade WHERE id = :id;
+
+updateWhereId:
+UPDATE grade SET
+    number = :name,
+    courseId = :courseId
+WHERE id = :id;
+
+insertModel:
+INSERT INTO grade(
+    number,
+    courseId
+) VALUES ?;

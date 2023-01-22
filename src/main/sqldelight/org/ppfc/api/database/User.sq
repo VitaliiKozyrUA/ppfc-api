@@ -1,0 +1,30 @@
+CREATE TABLE IF NOT EXISTS user (
+    userCode TEXT PRIMARY KEY AUTOINCREMENT,
+    groupId INTEGER,
+    teacherId INTEGER,
+    isGroup INTEGER NOT NULL
+);
+
+selectAll:
+SELECT * FROM user;
+
+selectWhereUserCode:
+SELECT * FROM user WHERE userCode = :userCode;
+
+deleteWhereUserCode:
+DELETE FROM user WHERE userCode = :userCode;
+
+updateWhereUserCode:
+UPDATE user SET
+    groupId = :groupId,
+    teacherId = :teacherId,
+    isGroup = :isGroup
+WHERE userCode = :userCode;
+
+insertModel:
+INSERT INTO user(
+    userCode,
+    groupId,
+    teacherId,
+    isGroup
+) VALUES ?;

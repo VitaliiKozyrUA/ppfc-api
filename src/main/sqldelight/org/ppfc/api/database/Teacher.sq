@@ -1,0 +1,36 @@
+CREATE TABLE IF NOT EXISTS teacher (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
+    middleName TEXT NOT NULL,
+    disciplineId INTEGER NOT NULL,
+    isHeadTeacher INTEGER NOT NULL,
+    FOREIGN KEY (disciplineId) REFERENCES discipline(id) ON DELETE CASCADE
+);
+
+selectAll:
+SELECT * FROM teacher;
+
+selectWhereId:
+SELECT * FROM teacher WHERE id = :id;
+
+deleteWhereId:
+DELETE FROM teacher WHERE id = :id;
+
+updateWhereId:
+UPDATE teacher SET
+    firstName = :firstName,
+    lastName = :lastName,
+    middleName = :middleName,
+    disciplineId = :disiplineId,
+    isHeadTeacher = :isHeadTeacher
+WHERE id = :id;
+
+insertModel:
+INSERT INTO teacher(
+    firstName,
+    lastName,
+    middleName,
+    disciplineId,
+    isHeadTeacher
+) VALUES ?;
