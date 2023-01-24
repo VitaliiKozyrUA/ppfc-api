@@ -1,23 +1,23 @@
-CREATE TABLE IF NOT EXISTS discipline (
+CREATE TABLE IF NOT EXISTS DisciplineDto (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL
 );
 
 selectAll:
-SELECT * FROM discipline;
+SELECT * FROM DisciplineDto;
 
 selectWhereId:
-SELECT * FROM discipline WHERE id = :id;
+SELECT * FROM DisciplineDto WHERE id = :id;
 
 deleteWhereId:
-DELETE FROM discipline WHERE id = :id;
+DELETE FROM DisciplineDto WHERE id = :id;
 
 updateWhereId:
-UPDATE discipline SET
+UPDATE DisciplineDto SET
     name = :name
 WHERE id = :id;
 
 insertModel:
-INSERT INTO discipline(
+INSERT INTO DisciplineDto(
     name
 ) VALUES ?;

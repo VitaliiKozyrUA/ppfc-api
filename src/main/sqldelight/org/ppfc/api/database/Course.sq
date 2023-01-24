@@ -1,23 +1,23 @@
-CREATE TABLE IF NOT EXISTS course (
+CREATE TABLE IF NOT EXISTS CourseDto (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     number INTEGER NOT NULL
 );
 
 selectAll:
-SELECT * FROM course;
+SELECT * FROM CourseDto;
 
 selectWhereId:
-SELECT * FROM course WHERE id = :id;
+SELECT * FROM CourseDto WHERE id = :id;
 
 deleteWhereId:
-DELETE FROM course WHERE id = :id;
+DELETE FROM CourseDto WHERE id = :id;
 
 updateWhereId:
-UPDATE course SET
+UPDATE CourseDto SET
     number = :name
 WHERE id = :id;
 
 insertModel:
-INSERT INTO course(
+INSERT INTO CourseDto(
     number
 ) VALUES ?;

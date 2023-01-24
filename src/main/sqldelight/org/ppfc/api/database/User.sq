@@ -1,28 +1,28 @@
-CREATE TABLE IF NOT EXISTS user (
-    userCode TEXT PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS UserDto (
+    userCode TEXT PRIMARY KEY,
     groupId INTEGER,
     teacherId INTEGER,
     isGroup INTEGER NOT NULL
 );
 
 selectAll:
-SELECT * FROM user;
+SELECT * FROM UserDto;
 
 selectWhereUserCode:
-SELECT * FROM user WHERE userCode = :userCode;
+SELECT * FROM UserDto WHERE userCode = :userCode;
 
 deleteWhereUserCode:
-DELETE FROM user WHERE userCode = :userCode;
+DELETE FROM UserDto WHERE userCode = :userCode;
 
 updateWhereUserCode:
-UPDATE user SET
+UPDATE UserDto SET
     groupId = :groupId,
     teacherId = :teacherId,
     isGroup = :isGroup
 WHERE userCode = :userCode;
 
 insertModel:
-INSERT INTO user(
+INSERT INTO UserDto(
     userCode,
     groupId,
     teacherId,

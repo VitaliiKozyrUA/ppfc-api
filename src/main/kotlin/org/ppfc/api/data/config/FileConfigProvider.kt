@@ -7,7 +7,7 @@ class FileConfigProvider(resourceName: String) : ConfigProvider {
 
     init {
         val configInputStream = javaClass.getResourceAsStream("/$resourceName")
-        if(configInputStream != null) {
+        if (configInputStream != null) {
             val properties = Properties()
             properties.load(configInputStream)
 

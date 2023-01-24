@@ -1,33 +1,33 @@
-CREATE TABLE IF NOT EXISTS teacher (
+CREATE TABLE IF NOT EXISTS TeacherDto (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     firstName TEXT NOT NULL,
     lastName TEXT NOT NULL,
     middleName TEXT NOT NULL,
     disciplineId INTEGER NOT NULL,
     isHeadTeacher INTEGER NOT NULL,
-    FOREIGN KEY (disciplineId) REFERENCES discipline(id) ON DELETE CASCADE
+    FOREIGN KEY (disciplineId) REFERENCES DisciplineDto(id) ON DELETE CASCADE
 );
 
 selectAll:
-SELECT * FROM teacher;
+SELECT * FROM TeacherDto;
 
 selectWhereId:
-SELECT * FROM teacher WHERE id = :id;
+SELECT * FROM TeacherDto WHERE id = :id;
 
 deleteWhereId:
-DELETE FROM teacher WHERE id = :id;
+DELETE FROM TeacherDto WHERE id = :id;
 
 updateWhereId:
-UPDATE teacher SET
+UPDATE TeacherDto SET
     firstName = :firstName,
     lastName = :lastName,
     middleName = :middleName,
-    disciplineId = :disiplineId,
+    disciplineId = :disciplineId,
     isHeadTeacher = :isHeadTeacher
 WHERE id = :id;
 
 insertModel:
-INSERT INTO teacher(
+INSERT INTO TeacherDto(
     firstName,
     lastName,
     middleName,

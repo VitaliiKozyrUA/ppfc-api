@@ -2,14 +2,11 @@ package org.ppfc.api.security.auth
 
 import aws.sdk.kotlin.services.cognitoidentityprovider.CognitoIdentityProviderClient
 import aws.sdk.kotlin.services.cognitoidentityprovider.model.*
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.ppfc.api.data.config.ConfigProvider
 import org.ppfc.api.security.AppCredentialsProvider
+import kotlin.collections.set
 
-class CognitoAuthProvider : AuthProvider, KoinComponent {
-    private val config: ConfigProvider = get()
-
+class CognitoAuthProvider(private val config: ConfigProvider) : AuthProvider {
     override suspend fun auth(
         username: String, password: String
     ): AuthResult {

@@ -1,6 +1,6 @@
-CREATE TABLE IF NOT EXISTS schedule (
+CREATE TABLE IF NOT EXISTS ScheduleDto (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    gradeId INTEGER NOT NULL,
+    groupId INTEGER NOT NULL,
     classroomId INTEGER NOT NULL,
     teacherId INTEGER NOT NULL,
     subjectId INTEGER,
@@ -9,24 +9,24 @@ CREATE TABLE IF NOT EXISTS schedule (
     lessonNumber INTEGER NOT NULL,
     dayNumber INTEGER NOT NULL,
     isNumerator INTEGER NOT NULL,
-    FOREIGN KEY (gradeId) REFERENCES grade(id) ON DELETE CASCADE,
-    FOREIGN KEY (classroomId) REFERENCES classroom(id) ON DELETE CASCADE,
-    FOREIGN KEY (teacherId) REFERENCES teacher(id) ON DELETE CASCADE,
-    FOREIGN KEY (subjectId) REFERENCES subject(id) ON DELETE CASCADE
+    FOREIGN KEY (groupId) REFERENCES GroupDto(id) ON DELETE CASCADE,
+    FOREIGN KEY (classroomId) REFERENCES CourseDto(id) ON DELETE CASCADE,
+    FOREIGN KEY (teacherId) REFERENCES TeacherDto(id) ON DELETE CASCADE,
+    FOREIGN KEY (subjectId) REFERENCES SubjectDto(id) ON DELETE CASCADE
 );
 
 selectAll:
-SELECT * FROM schedule;
+SELECT * FROM ScheduleDto;
 
 selectWhereId:
-SELECT * FROM schedule WHERE id = :id;
+SELECT * FROM ScheduleDto WHERE id = :id;
 
 deleteWhereId:
-DELETE FROM schedule WHERE id = :id;
+DELETE FROM ScheduleDto WHERE id = :id;
 
 updateWhereId:
-UPDATE schedule SET
-    gradeId = :gradeId,
+UPDATE ScheduleDto SET
+    groupId = :groupId,
     classroomId = :classroomId,
     teacherId = :teacherId,
     subjectId = :subjectId,
@@ -38,8 +38,8 @@ UPDATE schedule SET
 WHERE id = :id;
 
 insertModel:
-INSERT INTO schedule(
-    gradeId,
+INSERT INTO ScheduleDto(
+    groupId,
     classroomId,
     teacherId,
     subjectId,

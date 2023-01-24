@@ -2,10 +2,7 @@ package org.ppfc.api
 
 
 import io.ktor.server.application.*
-import org.ppfc.api.plugins.configureDependencyInjection
-import org.ppfc.api.plugins.configureRouting
-import org.ppfc.api.plugins.configureSecurity
-import org.ppfc.api.plugins.configureSerialization
+import org.ppfc.api.plugins.*
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -15,4 +12,5 @@ fun Application.module() {
     configureSerialization()
     configureSecurity()
     configureRouting()
+    configureApiRouting()
 }

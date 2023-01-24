@@ -1,0 +1,27 @@
+CREATE TABLE IF NOT EXISTS GroupDto (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    number INTEGER NOT NULL,
+    courseId INTEGER NOT NULL,
+    FOREIGN KEY (courseId) REFERENCES CourseDto(id) ON DELETE CASCADE
+);
+
+selectAll:
+SELECT * FROM GroupDto;
+
+selectWhereId:
+SELECT * FROM GroupDto WHERE id = :id;
+
+deleteWhereId:
+DELETE FROM GroupDto WHERE id = :id;
+
+updateWhereId:
+UPDATE GroupDto SET
+    number = :number,
+    courseId = :courseId
+WHERE id = :id;
+
+insertModel:
+INSERT INTO GroupDto(
+    number,
+    courseId
+) VALUES ?;

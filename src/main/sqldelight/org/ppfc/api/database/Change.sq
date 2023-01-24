@@ -1,6 +1,6 @@
-CREATE TABLE IF NOT EXISTS change (
+CREATE TABLE IF NOT EXISTS ChangeDto (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    gradeId INTEGER NOT NULL,
+    groupId INTEGER NOT NULL,
     classroomId INTEGER NOT NULL,
     teacherId INTEGER,
     subjectId INTEGER,
@@ -9,24 +9,24 @@ CREATE TABLE IF NOT EXISTS change (
     lessonNumber INTEGER NOT NULL,
     dateUnix INTEGER NOT NULL,
     isNumerator INTEGER NOT NULL,
-    FOREIGN KEY (gradeId) REFERENCES grade(id) ON DELETE CASCADE,
-    FOREIGN KEY (classroomId) REFERENCES classroom(id) ON DELETE CASCADE,
-    FOREIGN KEY (teacherId) REFERENCES teacher(id) ON DELETE CASCADE,
-    FOREIGN KEY (subjectId) REFERENCES subject(id) ON DELETE CASCADE
+    FOREIGN KEY (groupId) REFERENCES GroupDto(id) ON DELETE CASCADE,
+    FOREIGN KEY (classroomId) REFERENCES ClassroomDto(id) ON DELETE CASCADE,
+    FOREIGN KEY (teacherId) REFERENCES TeacherDto(id) ON DELETE CASCADE,
+    FOREIGN KEY (subjectId) REFERENCES SubjectDto(id) ON DELETE CASCADE
 );
 
 selectAll:
-SELECT * FROM change;
+SELECT * FROM ChangeDto;
 
 selectWhereId:
-SELECT * FROM change WHERE id = :id;
+SELECT * FROM ChangeDto WHERE id = :id;
 
 deleteWhereId:
-DELETE FROM change WHERE id = :id;
+DELETE FROM ChangeDto WHERE id = :id;
 
 updateWhereId:
-UPDATE change SET
-    gradeId = :gradeId,
+UPDATE ChangeDto SET
+    groupId = :groupId,
     classroomId = :classroomId,
     teacherId = :teacherId,
     subjectId = :subjectId,
@@ -38,8 +38,8 @@ UPDATE change SET
 WHERE id = :id;
 
 insertModel:
-INSERT INTO change(
-    gradeId,
+INSERT INTO ChangeDto(
+    groupId,
     classroomId,
     teacherId,
     subjectId,
