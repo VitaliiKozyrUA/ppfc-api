@@ -9,8 +9,7 @@ data class ChangeRequest(
     val teacherId: Long?,
     val subjectId: Long?,
     val eventName: String?,
-    val isSubject: Boolean,
     val lessonNumber: Long,
-    val dateUnix: Long,
+    val date: String,
     val isNumerator: Boolean
 )

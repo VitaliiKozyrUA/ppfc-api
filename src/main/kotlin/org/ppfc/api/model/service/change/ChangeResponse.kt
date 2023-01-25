@@ -16,6 +16,6 @@ data class ChangeResponse(
     val eventName: String?,
     val isSubject: Boolean,
     val lessonNumber: Long,
-    val dateUnix: Long,
+    val date: String,
     val isNumerator: Boolean
 )

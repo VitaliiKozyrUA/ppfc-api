@@ -23,9 +23,9 @@ fun Route.changeRouting() {
             ) { changes ->
                 var filteredChanges: List<ChangeResponse> = changes
 
-                call.request.queryParameters["date"]?.toLongOrNull()?.let { date ->
+                call.request.queryParameters["date"]?.let { date ->
                     filteredChanges = changes.filter { changeResponse ->
-                        changeResponse.dateUnix / 86_400_000 == date / 86_400_000
+                        changeResponse.date == date
                     }
                 }
 

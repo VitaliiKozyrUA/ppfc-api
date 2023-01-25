@@ -4,12 +4,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.ppfc.api.common.StringResource
 import org.ppfc.api.common.toLong
 import org.ppfc.api.database.Database
 import org.ppfc.api.model.service.change.ChangeRequest
 import org.ppfc.api.model.service.change.ChangeResponse
 import org.ppfc.api.model.service.toDto
 import org.ppfc.api.model.service.toResponse
+import org.ppfc.api.service.MalformedModelException
 import org.ppfc.api.service.ServiceResult
 import org.ppfc.api.service.abstraction.*
 import org.ppfc.api.service.sqlServiceExceptionHandler
@@ -22,7 +24,13 @@ class DbChangeService(private val database: Database) : ChangeService, KoinCompo
 
     override suspend fun add(change: ChangeRequest): ServiceResult<Unit> = withContext(Dispatchers.IO) {
         return@withContext sqlServiceExceptionHandler {
-            database.changeQueries.insertModel(change.toDto())
+
+            if(change.subjectId == null && change.eventName == null) {
+                throw MalformedModelException(message = StringResource.fieldsSubjectIdAndEventNameAreNull)
+            }
+            val isSubject = change.eventName == null
+
+            database.changeQueries.insertModel(change.toDto(isSubject))
         }
     }
 
@@ -88,15 +96,21 @@ class DbChangeService(private val database: Database) : ChangeService, KoinCompo
     override suspend fun update(id: Long, change: ChangeRequest): ServiceResult<Unit> =
         withContext(Dispatchers.IO) {
             return@withContext sqlServiceExceptionHandler {
+
+                if(change.subjectId == null && change.eventName == null) {
+                    throw MalformedModelException(message = StringResource.fieldsSubjectIdAndEventNameAreNull)
+                }
+                val isSubject = change.eventName == null
+
                 database.changeQueries.updateWhereId(
                     groupId = change.groupId,
                     classroomId = change.classroomId,
                     teacherId = change.teacherId,
                     subjectId = change.subjectId,
                     eventName = change.eventName,
-                    isSubject = change.isSubject.toLong(),
+                    isSubject = isSubject.toLong(),
                     lessonNumber = change.lessonNumber,
-                    dateUnix = change.dateUnix,
+                    date = change.date,
                     isNumerator = change.isNumerator.toLong(),
                     id = id
                 )

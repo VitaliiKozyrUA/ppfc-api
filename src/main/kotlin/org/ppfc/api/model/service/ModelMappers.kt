@@ -137,20 +137,20 @@ fun ChangeDto.toResponse(
     eventName = this.eventName,
     isSubject = this.isSubject.toBoolean(),
     lessonNumber = this.lessonNumber,
-    dateUnix = this.dateUnix,
+    date = this.date,
     isNumerator = this.isNumerator.toBoolean()
 )
 
-fun ChangeRequest.toDto() = ChangeDto(
+fun ChangeRequest.toDto(isSubject: Boolean) = ChangeDto(
     id = 0L,
     groupId = this.groupId,
     classroomId = this.classroomId,
     teacherId = this.teacherId,
     subjectId = this.subjectId,
     eventName = this.eventName,
-    isSubject = this.isSubject.toLong(),
+    isSubject = isSubject.toLong(),
     lessonNumber = this.lessonNumber,
-    dateUnix = this.dateUnix,
+    date = this.date,
     isNumerator = this.isNumerator.toLong()
 )
 
