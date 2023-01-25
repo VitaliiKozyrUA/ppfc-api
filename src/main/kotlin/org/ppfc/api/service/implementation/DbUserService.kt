@@ -29,7 +29,7 @@ class DbUserService(private val database: Database) : UserService, KoinComponent
         return@withContext sqlServiceExceptionHandler {
 
             if(user.groupId == null && user.teacherId == null) {
-                throw MalformedModelException(message = StringResource.fieldsSubjectIdAndEventNameAreNull)
+                throw MalformedModelException(message = StringResource.fieldsGroupIdAndTeacherIdAreNull)
             }
             val isGroup = user.teacherId == null
 
@@ -81,7 +81,7 @@ class DbUserService(private val database: Database) : UserService, KoinComponent
             return@withContext sqlServiceExceptionHandler {
 
                 if(user.groupId == null && user.teacherId == null) {
-                    throw MalformedModelException(message = StringResource.fieldsSubjectIdAndEventNameAreNull)
+                    throw MalformedModelException(message = StringResource.fieldsGroupIdAndTeacherIdAreNull)
                 }
                 val isGroup = user.teacherId == null
 
