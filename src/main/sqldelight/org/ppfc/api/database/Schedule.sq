@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS ScheduleDto (
     dayNumber INTEGER NOT NULL,
     isNumerator INTEGER NOT NULL,
     FOREIGN KEY (groupId) REFERENCES GroupDto(id) ON DELETE CASCADE,
-    FOREIGN KEY (classroomId) REFERENCES CourseDto(id) ON DELETE CASCADE,
+    FOREIGN KEY (classroomId) REFERENCES ClassroomDto(id) ON DELETE CASCADE,
     FOREIGN KEY (teacherId) REFERENCES TeacherDto(id) ON DELETE CASCADE,
     FOREIGN KEY (subjectId) REFERENCES SubjectDto(id) ON DELETE CASCADE
 );
