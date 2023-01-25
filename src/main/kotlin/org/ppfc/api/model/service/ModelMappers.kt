@@ -161,9 +161,9 @@ fun UserDto.toResponse(group: GroupResponse?, teacher: TeacherResponse?) = UserR
     isGroup = this.isGroup.toBoolean()
 )
 
-fun UserRequest.toDto() = UserDto(
+fun UserRequest.toDto(isGroup: Boolean) = UserDto(
     userCode = this.userCode,
     groupId = this.groupId,
     teacherId = this.teacherId,
-    isGroup = this.isGroup.toLong()
+    isGroup = isGroup.toLong()
 )

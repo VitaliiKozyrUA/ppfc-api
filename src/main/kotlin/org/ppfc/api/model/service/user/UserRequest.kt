@@ -6,6 +6,5 @@ import kotlinx.serialization.Serializable
 data class UserRequest(
     val userCode: String,
     val groupId: Long?,
-    val teacherId: Long?,
-    val isGroup: Boolean
+    val teacherId: Long?
 )

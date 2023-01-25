@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.ppfc.api.common.StringResource
 import org.ppfc.api.common.cache.Cache
 import org.ppfc.api.common.cache.ExpiringCache
 import org.ppfc.api.common.toLong
@@ -12,6 +13,7 @@ import org.ppfc.api.model.service.toDto
 import org.ppfc.api.model.service.toResponse
 import org.ppfc.api.model.service.user.UserRequest
 import org.ppfc.api.model.service.user.UserResponse
+import org.ppfc.api.service.MalformedModelException
 import org.ppfc.api.service.ServiceResult
 import org.ppfc.api.service.abstraction.GroupService
 import org.ppfc.api.service.abstraction.TeacherService
@@ -25,7 +27,13 @@ class DbUserService(private val database: Database) : UserService, KoinComponent
 
     override suspend fun add(user: UserRequest): ServiceResult<Unit> = withContext(Dispatchers.IO) {
         return@withContext sqlServiceExceptionHandler {
-            database.userQueries.insertModel(user.toDto())
+
+            if(user.groupId == null && user.teacherId == null) {
+                throw MalformedModelException(message = StringResource.fieldsSubjectIdAndEventNameAreNull)
+            }
+            val isGroup = user.teacherId == null
+
+            database.userQueries.insertModel(user.toDto(isGroup = isGroup))
         }
     }
 
@@ -71,10 +79,16 @@ class DbUserService(private val database: Database) : UserService, KoinComponent
     override suspend fun update(userCode: String, user: UserRequest): ServiceResult<Unit> =
         withContext(Dispatchers.IO) {
             return@withContext sqlServiceExceptionHandler {
+
+                if(user.groupId == null && user.teacherId == null) {
+                    throw MalformedModelException(message = StringResource.fieldsSubjectIdAndEventNameAreNull)
+                }
+                val isGroup = user.teacherId == null
+
                 database.userQueries.updateWhereUserCode(
                     groupId = user.groupId,
                     teacherId = user.teacherId,
-                    isGroup = user.isGroup.toLong(),
+                    isGroup = isGroup.toLong(),
                     userCode = userCode
                 )
             }
