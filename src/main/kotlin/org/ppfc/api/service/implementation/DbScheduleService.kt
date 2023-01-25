@@ -4,12 +4,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.ppfc.api.common.StringResource
 import org.ppfc.api.common.toLong
 import org.ppfc.api.database.Database
 import org.ppfc.api.model.service.schedule.ScheduleRequest
 import org.ppfc.api.model.service.schedule.ScheduleResponse
 import org.ppfc.api.model.service.toDto
 import org.ppfc.api.model.service.toResponse
+import org.ppfc.api.service.MalformedModelException
 import org.ppfc.api.service.ServiceResult
 import org.ppfc.api.service.abstraction.*
 import org.ppfc.api.service.sqlServiceExceptionHandler
@@ -22,7 +24,13 @@ class DbScheduleService(private val database: Database) : ScheduleService, KoinC
 
     override suspend fun add(schedule: ScheduleRequest): ServiceResult<Unit> = withContext(Dispatchers.IO) {
         return@withContext sqlServiceExceptionHandler {
-            database.scheduleQueries.insertModel(schedule.toDto())
+
+            if(schedule.subjectId == null && schedule.eventName == null) {
+                throw MalformedModelException(message = StringResource.fieldsSubjectIdAndEventNameAreNull)
+            }
+            val isSubject = schedule.eventName == null
+
+            database.scheduleQueries.insertModel(schedule.toDto(isSubject = isSubject))
         }
     }
 
@@ -84,13 +92,19 @@ class DbScheduleService(private val database: Database) : ScheduleService, KoinC
     override suspend fun update(id: Long, schedule: ScheduleRequest): ServiceResult<Unit> =
         withContext(Dispatchers.IO) {
             return@withContext sqlServiceExceptionHandler {
+
+                if(schedule.subjectId == null && schedule.eventName == null) {
+                    throw MalformedModelException(message = StringResource.fieldsSubjectIdAndEventNameAreNull)
+                }
+                val isSubject = schedule.eventName == null
+
                 database.scheduleQueries.updateWhereId(
                     groupId = schedule.groupId,
                     classroomId = schedule.classroomId,
                     teacherId = schedule.teacherId,
                     subjectId = schedule.subjectId,
                     eventName = schedule.eventName,
-                    isSubject = schedule.isSubject.toLong(),
+                    isSubject = isSubject.toLong(),
                     lessonNumber = schedule.lessonNumber,
                     dayNumber = schedule.dayNumber,
                     isNumerator = schedule.isNumerator.toLong(),

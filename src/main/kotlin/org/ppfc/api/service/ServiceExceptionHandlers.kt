@@ -14,11 +14,15 @@ suspend fun <T> sqlServiceExceptionHandler(block: suspend () -> T): ServiceResul
             }
 
             else -> {
-                "Помилка $sqlLiteErrorCode."
+                "Помилка: $sqlLiteErrorCode."
             }
         }
 
         return ServiceResult.Failure(message = errorMessage)
+    } catch (e: MalformedModelException) {
+        return ServiceResult.Failure(
+            message = "Помилка: ${e.message}."
+        )
     } catch (e: Exception) {
         return ServiceResult.Failure(
             message = "Помилка: ${e.message}."

@@ -110,14 +110,14 @@ fun ScheduleDto.toResponse(
     isNumerator = this.isNumerator.toBoolean()
 )
 
-fun ScheduleRequest.toDto() = ScheduleDto(
+fun ScheduleRequest.toDto(isSubject: Boolean) = ScheduleDto(
     id = 0L,
     groupId = this.groupId,
     classroomId = this.classroomId,
     teacherId = this.teacherId,
     subjectId = this.subjectId,
     eventName = this.eventName,
-    isSubject = this.isSubject.toLong(),
+    isSubject = isSubject.toLong(),
     lessonNumber = this.lessonNumber,
     dayNumber = this.dayNumber,
     isNumerator = this.isNumerator.toLong()
