@@ -7,7 +7,7 @@ import io.ktor.server.routing.*
 fun Application.configureRouting() {
     routing {
         get("/") {
-            call.respondText("Welcome to PPFC Api Server!")
+            call.respondText("Welcome to PPFC Server!")
         }
     }
 }
