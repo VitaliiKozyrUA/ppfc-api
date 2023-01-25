@@ -10,7 +10,7 @@ suspend fun <T> sqlServiceExceptionHandler(block: suspend () -> T): ServiceResul
     } catch (e: SQLiteException) {
         val errorMessage = when (val sqlLiteErrorCode = e.resultCode.name) {
             "SQLITE_CONSTRAINT_FOREIGNKEY" -> {
-                "Помилка зовнішнього ключа. Ви проводите операцію, яка впливає на дані іншої таблиці."
+                "Помилка зовнішнього ключа."
             }
 
             else -> {
