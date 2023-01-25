@@ -30,7 +30,7 @@ class DbChangeService(private val database: Database) : ChangeService, KoinCompo
             }
             val isSubject = change.eventName == null
 
-            database.changeQueries.insertModel(change.toDto(isSubject))
+            database.changeQueries.insertModel(change.toDto(isSubject = isSubject))
         }
     }
 
