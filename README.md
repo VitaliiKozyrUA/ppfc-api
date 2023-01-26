@@ -1260,4 +1260,4 @@ DELETE /user/{id}
 
 
 ## Схема бази даних
-
+![Схема бази даних](databaseScheme.png)
