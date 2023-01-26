@@ -1,0 +1,1354 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>documentation</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li><a href="#документація">ДОКУМЕНТАЦІЯ</a>
+<ul>
+<li><a href="#автентифікація">Автентифікація</a></li>
+<li><a href="#зміна-пароля-у-випадку--статусу-new_password_required">Зміна пароля у випадку  статусу NEW_PASSWORD_REQUIRED</a></li>
+<li><a href="#оновлення-коду-доступу">Оновлення коду доступу</a></li>
+<li><a href="#авторизація">Авторизація</a></li>
+<li><a href="#дисципліни">Дисципліни</a></li>
+<li><a href="#класні-кімнати">Класні кімнати</a></li>
+<li><a href="#курси">Курси</a></li>
+<li><a href="#предмети">Предмети</a></li>
+<li><a href="#групи">Групи</a></li>
+<li><a href="#викладачі">Викладачі</a></li>
+<li><a href="#розклад">Розклад</a></li>
+<li><a href="#зміни">Зміни</a></li>
+<li><a href="#користувачі">Користувачі</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="документація">ДОКУМЕНТАЦІЯ</h1>
+<p>Базова URL: <code>http://ppfc.eu-central-1.elasticbeanstalk.com/api</code></p>
+<h2 id="автентифікація">Автентифікація</h2>
+<p>API використовує JSON WEB Token для авторизації запитів.<br>
+Отримати токен доступу та токен для його оновлення можна за наступним маршрутом.</p>
+<p><strong>Запит:</strong></p>
+<pre><code>POST /authenticate
+</code></pre>
+<pre><code>{
+    "username": "ІМ'Я КОРИСТУВАЧА",
+    "password": "ПАРОЛЬ"
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>{
+    "status": "SUCCESS",
+    "accessToken": "XXX",
+    "refreshToken": "XXX"
+}
+</code></pre>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно, але необхідно змінити пароль користувача.</p>
+</blockquote>
+<pre><code>{
+    "status": "NEW_PASSWORD_REQUIRED",
+    "session": "XXX"
+}
+</code></pre>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації, невірно введені автентифікаційні дані користувача.</p>
+</blockquote>
+<pre><code>{
+    "status": "FAILURE",
+    "error": "Not authorized: Incorrect username or password."
+}
+</code></pre>
+<h2 id="зміна-пароля-у-випадку--статусу-new_password_required">Зміна пароля у випадку  статусу NEW_PASSWORD_REQUIRED</h2>
+<p><strong>Запит:</strong></p>
+<pre><code>POST /authChallengeSetNewPassword
+</code></pre>
+<pre><code>{
+    "username": "ІМ'Я КОРИСТУВАЧА",
+    "password": "НОВИЙ ПАРОЛЬ",
+    "session": "XXX"
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>{
+    "status": "SUCCESS",
+    "accessToken": "XXX",
+    "refreshToken": "XXX"
+}
+</code></pre>
+<blockquote>
+<p><strong>500</strong> - Виникла внутрішня помилка, код сесії було введено не вірно.</p>
+</blockquote>
+<pre><code>{
+    "status": "FAILURE",
+    "error": "Internal error: Invalid session provided"
+}
+</code></pre>
+<h2 id="оновлення-коду-доступу">Оновлення коду доступу</h2>
+<p><strong>Запит:</strong></p>
+<pre><code>POST /refreshAccessToken
+</code></pre>
+<pre><code>{
+    "refreshToken": "XXX"
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>{
+    "status": "SUCCESS",
+    "accessToken": "XXX",
+    "refreshToken": "XXX"
+}
+</code></pre>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації, токен було введено не вірно.</p>
+</blockquote>
+<pre><code>{
+    "status": "FAILURE",
+    "error": "Not authorized: Invalid Refresh Token"
+}
+</code></pre>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h2 id="авторизація">Авторизація</h2>
+<p>Для авторизації необхідно додати токен доступу у заголовки запита.</p>
+<pre><code>Authorization: Bearer ТОКЕН ДОСТУПУ
+</code></pre>
+<h2 id="дисципліни">Дисципліни</h2>
+<p>Потрібна авторизація: <code>ТАК</code></p>
+<h3 id="отримати-всі-дисципліни">Отримати всі дисципліни</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /discipline
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>[{
+    "id": 1,
+    "name": "ПІ"
+},
+...
+]
+</code></pre>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="отримати-дисципліну-використовуючи-ідентифікатор">Отримати дисципліну використовуючи ідентифікатор</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /discipline/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>{
+    "id": 1,
+    "name": "ПІ"
+}
+</code></pre>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="додати-дисципліну">Додати дисципліну</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>POST /discipline
+</code></pre>
+<pre><code>{
+    "name": "ПІ"	
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="оновити-дисципліну">Оновити дисципліну</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>PUT /discipline/{id}
+</code></pre>
+<pre><code>{
+    "name": "ПІ"	
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="видалити-дисципліну">Видалити дисципліну</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>DELETE /discipline/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h2 id="класні-кімнати">Класні кімнати</h2>
+<p>Потрібна авторизація: <code>ТАК</code></p>
+<h3 id="отримати-всі-класні-кімнати">Отримати всі класні кімнати</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /classroom
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>[{
+    "id": 1,
+    "name": "221"
+},
+...
+]
+</code></pre>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="отримати-класну-кімнату-використовуючи-ідентифікатор">Отримати класну кімнату використовуючи ідентифікатор</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /classroom/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>{
+    "id": 1,
+    "name": "221"
+}
+</code></pre>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="додати-класну-кімнату">Додати класну кімнату</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>POST /classroom
+</code></pre>
+<pre><code>{
+    "name": "221"	
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="оновити-класну-кімнату">Оновити класну кімнату</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>PUT /classroom/{id}
+</code></pre>
+<pre><code>{
+    "name": "221"	
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="видалити-класну-кімнату">Видалити класну кімнату</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>DELETE /classroom/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h2 id="курси">Курси</h2>
+<p>Потрібна авторизація: <code>ТАК</code></p>
+<h3 id="отримати-всі-курси">Отримати всі курси</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /course
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>[{
+    "id": 1,
+    "number": 1
+},
+...
+]
+</code></pre>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="отримати-курс-використовуючи-ідентифікатор">Отримати курс використовуючи ідентифікатор</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /course/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>{
+    "id": 1,
+    "number": 1
+}
+</code></pre>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="додати-курс">Додати курс</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>POST /course
+</code></pre>
+<pre><code>{
+    "number": 1
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="оновити-курс">Оновити курс</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>PUT /course/{id}
+</code></pre>
+<pre><code>{
+    "number": 1
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="видалити-курс">Видалити курс</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>DELETE /course/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h2 id="предмети">Предмети</h2>
+<p>Потрібна авторизація: <code>ТАК</code></p>
+<h3 id="отримати-всі-предмети">Отримати всі предмети</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /subject
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>[{
+    "id": 1,
+    "name": "Основи програмної інженерії"
+},
+...
+]
+</code></pre>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="отримати-предмет-використовуючи-ідентифікатор">Отримати предмет використовуючи ідентифікатор</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /subject/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>{
+    "id": 1,
+    "name": "Основи програмної інженерії"
+}
+</code></pre>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="додати-предмет">Додати предмет</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>POST /subject
+</code></pre>
+<pre><code>{
+    "name": "Основи програмної інженерії"
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="оновити-предмет">Оновити предмет</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>PUT /subject/{id}
+</code></pre>
+<pre><code>{
+    "name": "Основи програмної інженерії"
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="видалити-предмет">Видалити предмет</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>DELETE /subject/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h2 id="групи">Групи</h2>
+<p>Потрібна авторизація: <code>ТАК</code></p>
+<h3 id="отримати-всі-групи">Отримати всі групи</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /group
+</code></pre>
+<p><strong>Параметри запиту:</strong></p>
+<ul>
+<li><strong>courseId</strong> - приймає ідентифікатор курсу.</li>
+<li><strong>courseNumber</strong> - приймає номер курсу.</li>
+</ul>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>[{
+    "id": 1,
+    "number": 14,
+    "course": {
+        "id": 1,
+        "number": 1
+    }
+},
+...
+]
+</code></pre>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="отримати-групу-використовуючи-ідентифікатор">Отримати групу використовуючи ідентифікатор</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /group/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>{
+    "id": 4,
+    "number": 44,
+    "course": {
+        "id": 4,
+        "number": 4
+    }
+}
+</code></pre>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="додати-групу">Додати групу</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>POST /group
+</code></pre>
+<pre><code>{
+    "number": 44,
+    "courseId": 4
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="оновити-групу">Оновити групу</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>PUT /group/{id}
+</code></pre>
+<pre><code>{
+    "number": 44,
+    "courseId": 4
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="видалити-групу">Видалити групу</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>DELETE /group/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h2 id="викладачі">Викладачі</h2>
+<p>Потрібна авторизація: <code>ТАК</code></p>
+<h3 id="отримати-всіх-викладачів">Отримати всіх викладачів</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /teacher
+</code></pre>
+<p><strong>Параметри запиту:</strong></p>
+<ul>
+<li><strong>disciplineId</strong> - приймає ідентифікатор дисципліни.</li>
+<li><strong>disciplineName</strong> - приймає назву дисципліни.</li>
+</ul>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>[{
+    "id": 1,
+    "firstName": "Олександр",
+    "lastName": "Бабич",
+    "middleName": "Вікторович",
+    "discipline": {
+        "id": 1,
+        "name": "ПІ"
+    },
+    "isHeadTeacher": true
+},
+...
+]
+</code></pre>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="отримати-викладача-використовуючи-ідентифікатор">Отримати викладача використовуючи ідентифікатор</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /teacher/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>{
+    "id": 1,
+    "firstName": "Олександр",
+    "lastName": "Бабич",
+    "middleName": "Вікторович",
+    "discipline": {
+        "id": 1,
+        "name": "ПІ"
+    },
+    "isHeadTeacher": true
+}
+</code></pre>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="додати-викладача">Додати викладача</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>POST /teacher
+</code></pre>
+<pre><code>{
+    "firstName": "Олександр",
+    "middleName": "Вікторович",
+    "lastName": "Бабич",
+    "disciplineId": 1,
+    "isHeadTeacher": true
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="оновити-викладача">Оновити викладача</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>PUT /teacher/{id}
+</code></pre>
+<pre><code>{
+    "firstName": "Олександр",
+    "middleName": "Вікторович",
+    "lastName": "Бабич",
+    "disciplineId": 1,
+    "isHeadTeacher": true
+}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="видалити-викладача">Видалити викладача</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>DELETE /teacher/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h2 id="розклад">Розклад</h2>
+<p>Потрібна авторизація: <code>ТАК</code></p>
+<h3 id="отримати-розклад">Отримати розклад</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /schedule
+</code></pre>
+<p><strong>Параметри запиту:</strong></p>
+<ul>
+<li><strong>dayNumber</strong> - приймає номер дня тижня.</li>
+<li><strong>isNumerator</strong> - приймає булеве значення, <code>true</code> - чисельник, <code>false</code> - знаменник.</li>
+<li><strong>groupId</strong> - приймає ідентифікатор групи.</li>
+<li><strong>groupNumber</strong> - приймає номер групи.</li>
+<li><strong>teacherId</strong> - приймає ідентифікатор викладача.</li>
+</ul>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>[{
+    "id": 1,
+    "group": {
+        "id": 3,
+        "number": 34,
+        "course": {
+            "id": 3,
+            "number": 3
+        }
+    },
+    "classroom": {
+        "id": 1,
+        "name": "221"
+    },
+    "teacher": {
+        "id": 1,
+        "firstName": "Олександр",
+        "lastName": "Бабич",
+        "middleName": "Вікторович",
+        "discipline": {
+            "id": 1,
+            "name": "ПІ"
+        },
+        "isHeadTeacher": true
+    },
+    "subject": {
+        "id": 1,
+        "name": "Основи програмної інженерії"
+    },
+    "isSubject": true,
+    "lessonNumber": 1,
+    "dayNumber": 1,
+    "isNumerator": true
+},
+...
+]
+</code></pre>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="отримати-запис-розкладу-використовуючи-ідентифікатор">Отримати запис розкладу використовуючи ідентифікатор</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /schedule/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>{
+    "id": 2,
+    "group": {
+        "id": 4,
+        "number": 44,
+        "course": {
+            "id": 4,
+            "number": 4
+        }
+    },
+    "classroom": {
+        "id": 1,
+        "name": "221"
+    },
+    "teacher": {
+        "id": 1,
+        "firstName": "Олександр",
+        "lastName": "Бабич",
+        "middleName": "Вікторович",
+        "discipline": {
+            "id": 1,
+            "name": "ПІ"
+        },
+        "isHeadTeacher": true
+    },
+    "eventName": "Консультація",
+    "isSubject": false,
+    "lessonNumber": 1,
+    "dayNumber": 1,
+    "isNumerator": false
+}
+</code></pre>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="додати-запис-розкладу">Додати запис розкладу</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>POST /schedule
+</code></pre>
+<pre><code>{
+    "groupId": 3,
+    "classroomId": 1,
+    "teacherId": 1,
+    "subjectId": 1,
+    "lessonNumber": 1,
+    "dayNumber": 1,
+    "isNumerator": true
+}
+</code></pre>
+<p>або</p>
+<pre><code>{
+    "groupId": 4,
+    "classroomId": 1,
+    "teacherId": 1,
+    "eventName": "Консультація",
+    "lessonNumber": 1,
+    "dayNumber": 1,
+    "isNumerator": false
+}
+</code></pre>
+<p>Ремарка: поля <code>subjectId</code> та <code>eventName</code> не є обов’язковими. У тілі запиту має бути лише одне з цих полів.</p>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="оновити-запис-розкладу">Оновити запис розкладу</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>PUT /schedule/{id}
+</code></pre>
+<pre><code>{
+    "groupId": 3,
+    "classroomId": 1,
+    "teacherId": 1,
+    "subjectId": 1,
+    "lessonNumber": 1,
+    "dayNumber": 1,
+    "isNumerator": true
+}
+</code></pre>
+<p>або</p>
+<pre><code>{
+    "groupId": 4,
+    "classroomId": 1,
+    "teacherId": 1,
+    "eventName": "Консультація",
+    "lessonNumber": 1,
+    "dayNumber": 1,
+    "isNumerator": false
+}
+</code></pre>
+<p>Ремарка: поля <code>subjectId</code> та <code>eventName</code> не є обов’язковими. У тілі запиту має бути лише одне з цих полів.</p>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="видалити-запис-розкладу">Видалити запис розкладу</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>DELETE /schedule/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h2 id="зміни">Зміни</h2>
+<p>Потрібна авторизація: <code>ТАК</code></p>
+<h3 id="отримати-зміни">Отримати зміни</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /change
+</code></pre>
+<p><strong>Параметри запиту:</strong></p>
+<ul>
+<li><strong>date</strong> - приймає значення дати у форматі <code>yyyy-mm-dd</code>.</li>
+<li><strong>isNumerator</strong> - приймає булеве значення, <code>true</code> - чисельник, <code>false</code> - знаменник.</li>
+<li><strong>groupId</strong> - приймає ідентифікатор групи.</li>
+<li><strong>groupNumber</strong> - приймає номер групи.</li>
+<li><strong>teacherId</strong> - приймає ідентифікатор викладача.</li>
+</ul>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>[{
+    "id": 1,
+    "group": {
+        "id": 3,
+        "number": 34,
+        "course": {
+            "id": 3,
+            "number": 3
+        }
+    },
+    "classroom": {
+        "id": 1,
+        "name": "221"
+    },
+    "teacher": {
+        "id": 1,
+        "firstName": "Олександр",
+        "lastName": "Бабич",
+        "middleName": "Вікторович",
+        "discipline": {
+            "id": 1,
+            "name": "ПІ"
+        },
+        "isHeadTeacher": true
+    },
+    "subject": {
+        "id": 1,
+        "name": "Основи програмної інженерії"
+    },
+    "isSubject": true,
+    "lessonNumber": 1,
+    "date": "2023-03-01",
+    "isNumerator": false
+},
+...
+]
+</code></pre>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="отримати-зміну-використовуючи-ідентифікатор">Отримати зміну використовуючи ідентифікатор</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /change/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>{
+    "id": 2,
+    "group": {
+        "id": 4,
+        "number": 44,
+        "course": {
+            "id": 4,
+            "number": 4
+        }
+    },
+    "classroom": {
+        "id": 1,
+        "name": "221"
+    },
+    "teacher": {
+        "id": 1,
+        "firstName": "Олександр",
+        "lastName": "Бабич",
+        "middleName": "Вікторович",
+        "discipline": {
+            "id": 1,
+            "name": "ПІ"
+        },
+        "isHeadTeacher": true
+    },
+    "eventName": "Консультація",
+    "isSubject": false,
+    "lessonNumber": 2,
+    "date": "2023-03-01",
+    "isNumerator": false
+}
+</code></pre>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="додати-зміну">Додати зміну</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>POST /change
+</code></pre>
+<pre><code>{
+    "groupId": 3,
+    "classroomId": 1,
+    "teacherId": 1,
+    "subjectId": 1,
+    "lessonNumber": 1,
+    "date": "2023-03-01",
+    "isNumerator": false
+}
+</code></pre>
+<p>або</p>
+<pre><code>{
+    "groupId": 4,
+    "classroomId": 1,
+    "teacherId": 1,
+    "eventName": "Консультація",
+    "lessonNumber": 2,
+    "date": "2023-03-01",
+    "isNumerator": false
+}
+</code></pre>
+<p>Ремарка: поля <code>subjectId</code> та <code>eventName</code> не є обов’язковими. У тілі запиту має бути лише одне з цих полів.</p>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="оновити-зміну">Оновити зміну</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>PUT /change/{id}
+</code></pre>
+<pre><code>{
+    "groupId": 3,
+    "classroomId": 1,
+    "teacherId": 1,
+    "subjectId": 1,
+    "lessonNumber": 1,
+    "date": "2023-03-01",
+    "isNumerator": false
+}
+</code></pre>
+<p>або</p>
+<pre><code>{
+    "groupId": 4,
+    "classroomId": 1,
+    "teacherId": 1,
+    "eventName": "Консультація",
+    "lessonNumber": 2,
+    "date": "2023-03-01",
+    "isNumerator": false
+}
+</code></pre>
+<p>Ремарка: поля <code>subjectId</code> та <code>eventName</code> не є обов’язковими. У тілі запиту має бути лише одне з цих полів.</p>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="видалити-зміну">Видалити зміну</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>DELETE /change/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h2 id="користувачі">Користувачі</h2>
+<p>Потрібна авторизація: <code>ТАК</code></p>
+<h3 id="отримати-користувачів">Отримати користувачів</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /user
+</code></pre>
+<p><strong>Параметри запиту:</strong></p>
+<ul>
+<li><strong>isStudent</strong> - приймає булеве значення, <code>true</code> - студенти, <code>false</code> - викладачі.</li>
+</ul>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>[{
+    "id": 123456789,
+    "group": {
+        "id": 1,
+        "number": 14,
+        "course": {
+            "id": 1,
+            "number": 1
+        }
+    },
+    "isGroup": true
+},
+...
+]
+</code></pre>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="отримати-користувача-використовуючи-ідентифікатор">Отримати користувача використовуючи ідентифікатор</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>GET /user/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<pre><code>{
+    "id": 123456789,
+    "group": {
+        "id": 1,
+        "number": 14,
+        "course": {
+            "id": 1,
+            "number": 1
+        }
+    },
+    "isGroup": true
+}
+</code></pre>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="додати-користувача">Додати користувача</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>POST /user
+</code></pre>
+<pre><code>{
+    "id": 123456790,
+    "groupId": 1
+}
+</code></pre>
+<p>або</p>
+<pre><code>{
+    "id": 987654321,
+    "teacherId": 1
+}
+</code></pre>
+<p>Ремарка: поля <code>groupId</code> та <code>teacherId</code> не є обов’язковими. У тілі запиту має бути лише одне з цих полів.</p>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="оновити-користувача">Оновити користувача</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>PUT /user
+</code></pre>
+<pre><code>{
+    "id": 123456790,
+    "groupId": 1
+}
+</code></pre>
+<p>або</p>
+<pre><code>{
+    "id": 987654321,
+    "teacherId": 1
+}
+</code></pre>
+<p>Ремарка: поля <code>groupId</code> та <code>teacherId</code> не є обов’язковими. У тілі запиту має бути лише одне з цих полів.</p>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+<h3 id="видалити-користувача">Видалити користувача</h3>
+<p><strong>Запит:</strong></p>
+<pre><code>DELETE /user/{id}
+</code></pre>
+<p><strong>Відповідь:</strong></p>
+<blockquote>
+<p><strong>200</strong> - Запит виконано успішно.</p>
+</blockquote>
+<blockquote>
+<p><strong>400</strong> - Неправильний запит.</p>
+</blockquote>
+<blockquote>
+<p><strong>401</strong> - Помилка авторизації.</p>
+</blockquote>
+<blockquote>
+<p><strong>500</strong> - Внутрішня помилка сервера.</p>
+</blockquote>
+
+    </div>
+  </div>
+</body>
+
+</html>
