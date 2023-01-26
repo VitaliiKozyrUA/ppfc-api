@@ -7,6 +7,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 import org.koin.ktor.ext.get
+import org.ppfc.api.common.StringResource
 import org.ppfc.api.data.config.ConfigProvider
 import java.util.concurrent.TimeUnit
 
@@ -34,7 +35,7 @@ fun Application.configureSecurity() {
             }
 
             challenge { _, _ ->
-                call.respond(HttpStatusCode.Unauthorized, "Токен недійсний або термін його дії минув.")
+                call.respond(status = HttpStatusCode.Unauthorized, message = StringResource.tokenIsNotValidOrExpired)
             }
         }
     }

@@ -3,6 +3,7 @@ package org.ppfc.api.service
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
+import org.ppfc.api.common.StringResource
 
 suspend inline fun <reified T> standardServiceResponseHandler(
     result: ServiceResult<T>,
@@ -18,7 +19,7 @@ suspend inline fun <reified T> standardServiceResponseHandler(
                 )
             } ?: call.respond(
                 status = HttpStatusCode.NotFound,
-                message = "Ресурс не знайдено."
+                message = StringResource.resourceNotFound
             )
         }
 
