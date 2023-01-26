@@ -155,14 +155,14 @@ fun ChangeRequest.toDto(isSubject: Boolean) = ChangeDto(
 )
 
 fun UserDto.toResponse(group: GroupResponse?, teacher: TeacherResponse?) = UserResponse(
-    userCode = this.userCode,
+    id = this.id,
     group = group,
     teacher = teacher,
     isGroup = this.isGroup.toBoolean()
 )
 
 fun UserRequest.toDto(isGroup: Boolean) = UserDto(
-    userCode = this.userCode,
+    id = this.id,
     groupId = this.groupId,
     teacherId = this.teacherId,
     isGroup = isGroup.toLong()

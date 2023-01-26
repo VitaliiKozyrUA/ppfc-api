@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS UserDto (
-    userCode TEXT PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
     groupId INTEGER,
     teacherId INTEGER,
     isGroup INTEGER NOT NULL,
@@ -11,21 +11,21 @@ selectAll:
 SELECT * FROM UserDto;
 
 selectWhereUserCode:
-SELECT * FROM UserDto WHERE userCode = :userCode;
+SELECT * FROM UserDto WHERE id = :id;
 
 deleteWhereUserCode:
-DELETE FROM UserDto WHERE userCode = :userCode;
+DELETE FROM UserDto WHERE id = :id;
 
 updateWhereUserCode:
 UPDATE UserDto SET
     groupId = :groupId,
     teacherId = :teacherId,
     isGroup = :isGroup
-WHERE userCode = :userCode;
+WHERE id = :id;
 
 insertModel:
 INSERT INTO UserDto(
-    userCode,
+    id,
     groupId,
     teacherId,
     isGroup

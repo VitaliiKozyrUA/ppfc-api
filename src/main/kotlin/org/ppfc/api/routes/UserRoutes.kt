@@ -22,7 +22,7 @@ fun Route.userRouting() {
                 call = call
             ) { users ->
                 var filteredUsers: List<UserResponse> = users
-                call.request.queryParameters["isGroup"]?.toBooleanStrictOrNull()?.let { isGroup ->
+                call.request.queryParameters["isStudent"]?.toBooleanStrictOrNull()?.let { isGroup ->
                     filteredUsers = users.filter { userResponse ->
                         userResponse.isGroup == isGroup
                     }
@@ -32,14 +32,14 @@ fun Route.userRouting() {
             }
         }
 
-        get("{userCode?}") {
-            val userCode = call.parameters["userCode"] ?: run {
+        get("{id?}") {
+            val id = call.parameters["id"]?.toLongOrNull() ?: run {
                 call.respond(status = HttpStatusCode.BadRequest, message = StringResource.idPathParameterNotFound)
                 return@get
             }
 
             standardServiceResponseHandler(
-                result = userService.get(userCode = userCode),
+                result = userService.get(id = id),
                 call = call
             )
         }
@@ -53,28 +53,23 @@ fun Route.userRouting() {
             )
         }
 
-        put("{userCode?}") {
-            val userCode = call.parameters["userCode"] ?: run {
-                call.respond(status = HttpStatusCode.BadRequest, message = StringResource.idPathParameterNotFound)
-                return@put
-            }
-
+        put {
             val user = call.receive<UserRequest>()
 
             standardServiceResponseHandler(
-                result = userService.update(userCode = userCode, user = user),
+                result = userService.update(user = user),
                 call = call
             )
         }
 
-        delete("{userCode?}") {
-            val userCode = call.parameters["userCode"] ?: run {
+        delete("{id?}") {
+            val id = call.parameters["id"]?.toLongOrNull() ?: run {
                 call.respond(status = HttpStatusCode.BadRequest, message = StringResource.idPathParameterNotFound)
                 return@delete
             }
 
             standardServiceResponseHandler(
-                result = userService.delete(userCode = userCode),
+                result = userService.delete(id = id),
                 call = call
             )
         }

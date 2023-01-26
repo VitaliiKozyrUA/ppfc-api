@@ -21,7 +21,7 @@ import org.ppfc.api.service.abstraction.UserService
 import org.ppfc.api.service.sqlServiceExceptionHandler
 
 class DbUserService(private val database: Database) : UserService, KoinComponent {
-    private val getOperationCache: Cache<String, UserResponse> = ExpiringCache(expiryTime = 3000L)
+    private val getOperationCache: Cache<Long, UserResponse> = ExpiringCache(expiryTime = 3000L)
     private val groupService: GroupService by inject()
     private val teacherService: TeacherService by inject()
 
@@ -55,10 +55,10 @@ class DbUserService(private val database: Database) : UserService, KoinComponent
         }
     }
 
-    override suspend fun get(userCode: String): ServiceResult<UserResponse?> = withContext(Dispatchers.IO) {
+    override suspend fun get(id: Long): ServiceResult<UserResponse?> = withContext(Dispatchers.IO) {
         return@withContext sqlServiceExceptionHandler {
-            getOperationCache.getValue(userCode) {
-                val userDto = database.userQueries.selectWhereUserCode(userCode = userCode).executeAsOneOrNull()
+            getOperationCache.getValue(id) {
+                val userDto = database.userQueries.selectWhereUserCode(id = id).executeAsOneOrNull()
                     ?: return@getValue null
 
                 val group = userDto.groupId?.let {
@@ -76,7 +76,7 @@ class DbUserService(private val database: Database) : UserService, KoinComponent
         }
     }
 
-    override suspend fun update(userCode: String, user: UserRequest): ServiceResult<Unit> =
+    override suspend fun update(user: UserRequest): ServiceResult<Unit> =
         withContext(Dispatchers.IO) {
             return@withContext sqlServiceExceptionHandler {
 
@@ -89,14 +89,14 @@ class DbUserService(private val database: Database) : UserService, KoinComponent
                     groupId = user.groupId,
                     teacherId = user.teacherId,
                     isGroup = isGroup.toLong(),
-                    userCode = userCode
+                    id = user.id
                 )
             }
         }
 
-    override suspend fun delete(userCode: String): ServiceResult<Unit> = withContext(Dispatchers.IO) {
+    override suspend fun delete(id: Long): ServiceResult<Unit> = withContext(Dispatchers.IO) {
         return@withContext sqlServiceExceptionHandler {
-            database.userQueries.deleteWhereUserCode(userCode = userCode)
+            database.userQueries.deleteWhereUserCode(id = id)
         }
     }
 }

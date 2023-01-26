@@ -9,9 +9,9 @@ interface UserService {
 
     suspend fun getAll(): ServiceResult<List<UserResponse>>
 
-    suspend fun get(userCode: String): ServiceResult<UserResponse?>
+    suspend fun get(id: Long): ServiceResult<UserResponse?>
 
-    suspend fun update(userCode: String, user: UserRequest): ServiceResult<Unit>
+    suspend fun update(user: UserRequest): ServiceResult<Unit>
 
-    suspend fun delete(userCode: String): ServiceResult<Unit>
+    suspend fun delete(id: Long): ServiceResult<Unit>
 }
