@@ -6,4 +6,5 @@ object StringResource {
         "У моделі даних має бути хоча б одне ненульове поле subjectId або eventName."
     const val fieldsGroupIdAndTeacherIdAreNull =
         "У моделі даних має бути хоча б одне ненульове поле groupId або teacherId."
+    const val invalidDateFormat = "Формат дати невірний."
 }

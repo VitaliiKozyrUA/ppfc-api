@@ -6,11 +6,13 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.ppfc.api.common.StringResource
 import org.ppfc.api.common.toLong
+import org.ppfc.api.common.validateDateFormat
 import org.ppfc.api.database.Database
 import org.ppfc.api.model.service.change.ChangeRequest
 import org.ppfc.api.model.service.change.ChangeResponse
 import org.ppfc.api.model.service.toDto
 import org.ppfc.api.model.service.toResponse
+import org.ppfc.api.service.InvalidDateFormatException
 import org.ppfc.api.service.MalformedModelException
 import org.ppfc.api.service.ServiceResult
 import org.ppfc.api.service.abstraction.*
@@ -29,6 +31,10 @@ class DbChangeService(private val database: Database) : ChangeService, KoinCompo
                 throw MalformedModelException(message = StringResource.fieldsSubjectIdAndEventNameAreNull)
             }
             val isSubject = change.eventName == null
+
+            if(!validateDateFormat(pattern = "yyyy-MM-dd", date = change.date)) {
+                throw InvalidDateFormatException(message = StringResource.invalidDateFormat)
+            }
 
             database.changeQueries.insertModel(change.toDto(isSubject = isSubject))
         }
