@@ -1,1 +1,1 @@
-rootProject.name = "org.ppfc.api"
+rootProject.name = "api"
