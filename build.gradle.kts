@@ -23,7 +23,7 @@ plugins {
     id("com.squareup.sqldelight") version "1.5.4"
 }
 
-group = "org.ppfc.api"
+group = "org.ppfc"
 version = "0.1.0"
 
 application {
