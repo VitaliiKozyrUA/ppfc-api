@@ -33,6 +33,13 @@ fun Route.teacherRouting() {
                         teacherResponse.discipline.name == disciplineName
                     }
                 }
+
+                call.request.queryParameters["teacherFullName"]?.let { teacherFullName ->
+                    filteredTeachers = teachers.filter { teacherResponse ->
+                        "${teacherResponse.firstName} ${teacherResponse.lastName}" == teacherFullName
+                    }
+                }
+
                 filteredTeachers
             }
         }
