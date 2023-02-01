@@ -35,6 +35,12 @@ fun Route.groupRouting() {
                     }
                 }
 
+                call.request.queryParameters["groupNumber"]?.toLongOrNull()?.let { groupNumber ->
+                    filteredGroups = groups.filter { groupResponse ->
+                        groupResponse.number == groupNumber
+                    }
+                }
+
                 filteredGroups
             }
         }
