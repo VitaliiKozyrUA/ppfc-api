@@ -24,31 +24,31 @@ fun Route.changeRouting() {
                 var filteredChanges: List<ChangeResponse> = changes
 
                 call.request.queryParameters["date"]?.let { date ->
-                    filteredChanges = changes.filter { changeResponse ->
+                    filteredChanges = filteredChanges.filter { changeResponse ->
                         changeResponse.date == date
                     }
                 }
 
                 call.request.queryParameters["isNumerator"]?.toBooleanStrictOrNull()?.let { isNumerator ->
-                    filteredChanges = changes.filter { changeResponse ->
+                    filteredChanges = filteredChanges.filter { changeResponse ->
                         changeResponse.isNumerator == isNumerator
                     }
                 }
 
                 call.request.queryParameters["groupId"]?.toLongOrNull()?.let { groupId ->
-                    filteredChanges = changes.filter { changeResponse ->
+                    filteredChanges = filteredChanges.filter { changeResponse ->
                         changeResponse.group.id == groupId
                     }
                 }
 
                 call.request.queryParameters["groupNumber"]?.toLongOrNull()?.let { groupNumber ->
-                    filteredChanges = changes.filter { changeResponse ->
+                    filteredChanges = filteredChanges.filter { changeResponse ->
                         changeResponse.group.number == groupNumber
                     }
                 }
 
                 call.request.queryParameters["teacherId"]?.toLongOrNull()?.let { teacherId ->
-                    filteredChanges = changes.filter { changeResponse ->
+                    filteredChanges = filteredChanges.filter { changeResponse ->
                         changeResponse.teacher?.id == teacherId
                     }
                 }

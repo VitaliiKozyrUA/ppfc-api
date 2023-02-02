@@ -24,19 +24,19 @@ fun Route.groupRouting() {
                 var filteredGroups: List<GroupResponse> = groups
 
                 call.request.queryParameters["courseId"]?.toLongOrNull()?.let { courseId ->
-                    filteredGroups = groups.filter { groupResponse ->
+                    filteredGroups = filteredGroups.filter { groupResponse ->
                         groupResponse.course.id == courseId
                     }
                 }
 
                 call.request.queryParameters["courseNumber"]?.toLongOrNull()?.let { courseNumber ->
-                    filteredGroups = groups.filter { groupResponse ->
+                    filteredGroups = filteredGroups.filter { groupResponse ->
                         groupResponse.course.number == courseNumber
                     }
                 }
 
                 call.request.queryParameters["groupNumber"]?.toLongOrNull()?.let { groupNumber ->
-                    filteredGroups = groups.filter { groupResponse ->
+                    filteredGroups = filteredGroups.filter { groupResponse ->
                         groupResponse.number == groupNumber
                     }
                 }

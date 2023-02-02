@@ -24,31 +24,31 @@ fun Route.scheduleRouting() {
                 var filteredSchedule: List<ScheduleResponse> = schedule
 
                 call.request.queryParameters["dayNumber"]?.toLongOrNull()?.let { dayNumber ->
-                    filteredSchedule = schedule.filter { scheduleResponse ->
+                    filteredSchedule = filteredSchedule.filter { scheduleResponse ->
                         scheduleResponse.dayNumber == dayNumber
                     }
                 }
 
                 call.request.queryParameters["isNumerator"]?.toBooleanStrictOrNull()?.let { isNumerator ->
-                    filteredSchedule = schedule.filter { scheduleResponse ->
+                    filteredSchedule = filteredSchedule.filter { scheduleResponse ->
                         scheduleResponse.isNumerator == isNumerator
                     }
                 }
 
                 call.request.queryParameters["groupId"]?.toLongOrNull()?.let { groupId ->
-                    filteredSchedule = schedule.filter { scheduleResponse ->
+                    filteredSchedule = filteredSchedule.filter { scheduleResponse ->
                         scheduleResponse.group.id == groupId
                     }
                 }
 
                 call.request.queryParameters["groupNumber"]?.toLongOrNull()?.let { groupNumber ->
-                    filteredSchedule = schedule.filter { scheduleResponse ->
+                    filteredSchedule = filteredSchedule.filter { scheduleResponse ->
                         scheduleResponse.group.number == groupNumber
                     }
                 }
 
                 call.request.queryParameters["teacherId"]?.toLongOrNull()?.let { teacherId ->
-                    filteredSchedule = schedule.filter { scheduleResponse ->
+                    filteredSchedule = filteredSchedule.filter { scheduleResponse ->
                         scheduleResponse.teacher.id == teacherId
                     }
                 }

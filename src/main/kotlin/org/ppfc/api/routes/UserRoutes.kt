@@ -22,8 +22,9 @@ fun Route.userRouting() {
                 call = call
             ) { users ->
                 var filteredUsers: List<UserResponse> = users
+
                 call.request.queryParameters["isStudent"]?.toBooleanStrictOrNull()?.let { isGroup ->
-                    filteredUsers = users.filter { userResponse ->
+                    filteredUsers = filteredUsers.filter { userResponse ->
                         userResponse.isGroup == isGroup
                     }
                 }

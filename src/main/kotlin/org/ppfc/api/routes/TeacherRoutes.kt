@@ -22,20 +22,21 @@ fun Route.teacherRouting() {
                 call = call
             ) { teachers ->
                 var filteredTeachers: List<TeacherResponse> = teachers
+
                 call.request.queryParameters["disciplineId"]?.toLongOrNull()?.let { disciplineId ->
-                    filteredTeachers = teachers.filter { teacherResponse ->
+                    filteredTeachers = filteredTeachers.filter { teacherResponse ->
                         teacherResponse.discipline.id == disciplineId
                     }
                 }
 
                 call.request.queryParameters["disciplineName"]?.let { disciplineName ->
-                    filteredTeachers = teachers.filter { teacherResponse ->
+                    filteredTeachers = filteredTeachers.filter { teacherResponse ->
                         teacherResponse.discipline.name == disciplineName
                     }
                 }
 
                 call.request.queryParameters["teacherFullName"]?.let { teacherFullName ->
-                    filteredTeachers = teachers.filter { teacherResponse ->
+                    filteredTeachers = filteredTeachers.filter { teacherResponse ->
                         "${teacherResponse.firstName} ${teacherResponse.lastName}" == teacherFullName
                     }
                 }
